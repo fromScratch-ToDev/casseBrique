@@ -25,12 +25,19 @@ function draw() {
         });
         rectMode(CENTER);
         fill(255 , 255 , 255);
-        console.log(Barbell.coordY - Ball.getCoordY()   );
         rect(Barbell.coordX, Barbell.coordY, Barbell.width, Barbell.height,Barbell.width/10,Barbell.width/10,Barbell.width/10,Barbell.width/10);
         fill(0,0,255);
         circle(Ball.getCoordX(), Ball.getCoordY(),Ball.getDiameter());
         Ball.Move();
         
+        if (Brick.nbBrick == 0) {
+            textAlign(CENTER, CENTER);
+            textSize(32);
+            background(0);
+            fill(255); 
+            text('Gagné!', width / 2, height / 2);
+            noLoop();
+        }
     }
     else{
         textAlign(CENTER, CENTER);
@@ -38,6 +45,7 @@ function draw() {
         background(0);
         fill(255); 
         text('Perdu!', width / 2, height / 2);
+        noLoop();
     }
 }
 

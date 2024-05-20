@@ -6,6 +6,7 @@ class Player{
 }
 
 class Brick{
+    static nbBrick = 90;
     static #ligne = 0;
     static #column = 0;
     static width = 40;
@@ -30,6 +31,7 @@ class Brick{
         this.life--;
         if (this.life == 0) {
             Brick.matrixBrick[this.ligne][this.column] = null
+            Brick.nbBrick--;
         }
     }
 } 
@@ -109,22 +111,48 @@ class Ball{
         }
     }
     static BrickCollision(){
-        // à implémenter
+        Brick.matrixBrick.forEach((arrayBrick, y) => {
+            arrayBrick.forEach((brick, x) =>{
+                if(brick instanceof Brick){
+
+                    // points de chaque angle d'une brique
+                    let pointNO = (x * Brick.width, y * Brick.height);
+                    let pointNE = ((x+1) * Brick.width, y * Brick.height);
+                    let pointSE = ((x+1) * Brick.width, (y+1) * Brick.height);
+                    let pointSO = (x * Brick.width, (y+1) * Brick.height);
+
+                    // test collision en bas, puis à gauche, puis à droite, puis en haut 
+                    if (Ball.getCoordY() >= ((y+1) * Brick.height) && Ball.getCoordX() <= ((x+1) * Brick.width) && Ball.getCoordX() >= (x * Brick.width) && Ball.getCoordY() - ((y+1) * Brick.height) <= Ball.#radius){
+                        brick.hurt();
+                        Ball.setSpeedY(-Ball.getSpeedY()); 
+                    } else if (Ball.getCoordX() >= ((x+1) * Brick.width) && Ball.getCoordY() <= ((y+1) * Brick.height) && Ball.getCoordY() >= (y * Brick.height) && Ball.getCoordX() - ((x+1) * Brick.width) <= Ball.#radius){
+                        brick.hurt();
+                        Ball.setSpeedX(-Ball.getSpeedX()); 
+                    } else if (Ball.getCoordX() <= (x * Brick.width) && Ball.getCoordY() <= ((y+1) * Brick.height) && Ball.getCoordY() >= (y * Brick.height) && (x * Brick.width) - Ball.getCoordX() <= Ball.#radius ){
+                        brick.hurt();
+                        Ball.setSpeedX(-Ball.getSpeedX());
+                    } else if (Ball.getCoordY() <= (y * Brick.height) && Ball.getCoordX() <= ((x+1) * Brick.width) && Ball.getCoordX() >= (x * Brick.width) && (y * Brick.height) - Ball.getCoordY() <= Ball.#radius) {
+                        brick.hurt();
+                        Ball.setSpeedY(-Ball.getSpeedY()); 
+                    }
+                }
+            })
+        });
     }
     static BarbellCollision(){
         if (Barbell.coordY - Ball.getCoordY() >= Barbell.height/2 && Barbell.coordY - Ball.getCoordY() <= Barbell.height && Ball.isThrow) {
             // la balle touche le milieu de la barre
-            if (Math.abs(Barbell.coordX - Ball.getCoordX()) <= 2/10 *Barbell.width ) {
+            if (Math.abs(Barbell.coordX - Ball.getCoordX()) <= 1/10 *Barbell.width ) {
                 Ball.setSpeedX(Ball.#speed * 0);
                 Ball.setSpeedY(Ball.#speed * -1);
             } 
             // la barre touche le côté droit 
-            else if (Barbell.coordX - Ball.getCoordX() < -2/10 *Barbell.width && Barbell.coordX - Ball.getCoordX() >= -4/10 * Barbell.width ) {
+            else if (Barbell.coordX - Ball.getCoordX() < -1/10 *Barbell.width && Barbell.coordX - Ball.getCoordX() >= -4/10 * Barbell.width ) {
                 Ball.setSpeedX(Ball.#speed*0.5);
                 Ball.setSpeedY(-Ball.#speed*Math.sqrt(0.75));
             }
             // la barre touche le côté gauche 
-            else if (Barbell.coordX - Ball.getCoordX() > 2/10 *Barbell.width && Barbell.coordX - Ball.getCoordX() <= 4/10 * Barbell.width ) {
+            else if (Barbell.coordX - Ball.getCoordX() > 1/10 *Barbell.width && Barbell.coordX - Ball.getCoordX() <= 4/10 * Barbell.width ) {
                 Ball.setSpeedX(-Ball.#speed*0.5);
                 Ball.setSpeedY(-Ball.#speed*Math.sqrt(0.75));
             }
