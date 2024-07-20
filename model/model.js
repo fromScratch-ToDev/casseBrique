@@ -1,16 +1,23 @@
+import Ball from "./Ball.js";
+import Barbell from "./Barbell.js";
+import Brick from "./Brick.js";
+import Player from "./Player.js";
 
-const windowWidth = 600;
-const windowHeight = 600;
 
-export class Player{
-    static life = 3;
+export class Model{
+    static ball;
+    static barbell;
+    static player;
+    constructor(){
+        throw new Error("Cette classe ne peut pas être instancier");
+    }
+
+    static loadModel(p5) {
+        Model.ball = new Ball(p5)
+        Model.barbell = new Barbell();
+        Model.player = new Player();
+    }
+
 }
 
-
-export class Barbell{
-    static width = 100;
-    static height = 20;
-    static coordX = (windowWidth)/2;
-    static coordY = windowHeight - (Barbell.height /2);
-}
-
+export default Model;
